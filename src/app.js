@@ -37,8 +37,6 @@ const logger = winston.createLogger({
     ]
 });
 
-
-
 const { rateLimiter } = require('./middleware/auth');
 
 // Global Rate Limiting
@@ -48,8 +46,6 @@ app.use(rateLimiter);
 app.use('/', require('./routes/auth')); // Login
 app.use('/', require('./routes/index')); // Home and Redirects
 app.use('/api', require('./routes/url')); // API
-
-
 
 // Start Server
 const startServer = async () => {
