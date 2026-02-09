@@ -1,0 +1,16 @@
+<h1>Shorten URL</h1>
+<form id="shortenForm">
+    <input type="text" id="longUrl" name="longUrl" placeholder="Paste your long URL here..." required>
+
+    <input type="number" id="expiryDays" name="expiryDays" placeholder="Expiry (days)" value="30" min="1">
+
+    <input type="text" id="customShortUrl" name="customShortUrl" placeholder="Custom Alias (optional)">
+
+    <button type="submit">Shorten</button>
+    <div id="shortenError" class="error-message"></div>
+</form>
+
+<div class="result-container" id="resultContainer">
+    <div class="short-url" id="shortUrlResult"></div>
+    <button onclick="copyToClipboard()">Copy</button>
+</div>
