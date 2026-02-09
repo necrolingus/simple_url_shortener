@@ -80,6 +80,6 @@ typings/
 .dynamodb/
 
 # Documentation and Agent files
-AGENTS.md
-directives/
-requirements/
+### AGENTS.md
+### directives/
+### requirements/
