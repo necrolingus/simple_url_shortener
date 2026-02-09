@@ -4,4 +4,4 @@
 - You always consult the requirements/ folder for business and technical requirements. The user might also give requirements via a prompt, include them in your implementation plan.
 - Always put project source code in the src/ folder.
 - Always put project tests in the tests/ folder.
-- Always create your own little scripts to test things out or to do a job, into the skills/ folder. Prioritize these skills over just sending data to an LLM and burning through tokens. These skills will become reusable so we can do things consistently as we work on other projects.
+- Always create your own little scripts to test things out or to do a job, in the skills/ folder. Prioritize these skills over just sending data to an LLM and burning through tokens. These skills will become reusable so we can do things consistently as we work on other projects.
