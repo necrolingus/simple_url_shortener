@@ -78,3 +78,8 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# Documentation and Agent files
+AGENTS.md
+directives/
+requirements/

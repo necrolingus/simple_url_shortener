@@ -1,12 +1,11 @@
 const http = require('http');
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const apiKey = process.env.API_KEY || 'your_secure_api_key';
 
 const data = JSON.stringify({
     longUrl: 'https://example.com',
-    customShortUrl: 'invalid_alias!', // Invalid char
     expiryDays: 30
 });
 
