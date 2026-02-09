@@ -45,10 +45,12 @@ A modern, secure, and neon-themed URL shortener built with Node.js and PostgreSQ
     ```ini
     PORT=3000
     DB_CONFIG=postgres://user:password@localhost:5432/simple_url_shortener
-    API_KEY=your_secure_api_key_here
-    RATE_LIMIT=15
-    COOKIE_VALID_DAYS=1
+    API_KEY=your_secure_api_key
+    RATE_LIMIT=5
     DOMAIN=http://localhost:3000
+    GITHUB_REPO=https://github.com/necrolingus/simple_url_shortener
+    COOKIE_VALID_DAYS=10
+    RATE_LIMIT=5
     ```
 
 4.  **Run the Server**
@@ -77,16 +79,6 @@ A modern, secure, and neon-themed URL shortener built with Node.js and PostgreSQ
 ├── .env.example
 └── README.md
 ```
-
-## Contributing 🤝
-
-Contributions, issues, and feature requests are welcome!
-
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
 
 ## License
 
