@@ -113,14 +113,16 @@ button:hover {
 
 .repo-link {
     margin-top: 1.5rem;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     opacity: 0.9;
+    text-transform: lowercase;
 }
 
 .repo-link a {
     color: var(--text-white);
-    text-decoration: none;
-    /* border-bottom removed */
+    text-decoration: underline;
+    text-shadow: 0 0 10px #39ff14;
+    /* Neon Green Glow */
 }
 
 .result-container {
