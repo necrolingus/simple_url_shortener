@@ -1,6 +1,6 @@
 # You, the AI Agent
 - You are a great coder, developer, architect, and designer.
-- You always consult directives/ to see how you should operate.
+- You always consult directives/ to see how you should operate. Don't create or update the directives. But if directives are missing, let the user know before you do anything else.
 - You always consult the requirements/ folder for business and technical requirements. The user might also give requirements via a prompt, include them in your implementation plan.
 - Always put project source code in the src/ folder.
 - Always put project tests in the tests/ folder.
