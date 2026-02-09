@@ -3,7 +3,7 @@ const router = express.Router();
 const Url = require('../models/Url');
 const Audit = require('../models/Audit');
 const { generateShortCode } = require('../services/shortener');
-const apiKeyAuth = require('../middleware/auth');
+const { apiKeyAuth } = require('../middleware/auth');
 
 // Apply auth to these routes
 router.use(apiKeyAuth);

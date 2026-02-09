@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Url = require('../models/Url');
 const Audit = require('../models/Audit');
-const apiKeyAuth = require('../middleware/auth');
+const { apiKeyAuth } = require('../middleware/auth');
 
 // Public route: Redirect
 router.get('/s/:shortUrl', async (req, res) => {
