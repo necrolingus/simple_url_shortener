@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function copyToClipboard() {
     const text = document.getElementById('shortUrlResult').innerText;
     navigator.clipboard.writeText(text).then(() => {
-        alert('Copied to clipboard!');
+        // Copied silently
     }).catch(err => {
         console.error('Failed to copy', err);
     });

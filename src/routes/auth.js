@@ -9,8 +9,6 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    console.log('API KEY')
-    console.log(req.body)
     const { apiKey } = req.body;
 
     if (apiKey === process.env.API_KEY) {

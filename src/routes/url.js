@@ -9,7 +9,6 @@ const apiKeyAuth = require('../middleware/auth');
 router.use(apiKeyAuth);
 
 router.post('/shorten', async (req, res) => {
-    console.log('[DEBUG] POST /shorten body:', req.body);
     try {
         const { longUrl, customShortUrl, expiryDays } = req.body;
 
@@ -21,6 +20,10 @@ router.post('/shorten', async (req, res) => {
 
         // Validate custom short URL if provided
         if (shortCode) {
+            if (!/^[a-zA-Z0-9]+$/.test(shortCode)) {
+                return res.status(400).json({ error: 'Custom alias must contain only letters and numbers.' });
+            }
+
             const existing = await Url.findByPk(shortCode);
             if (existing) {
                 return res.status(400).json({ error: 'Custom short URL already exists' });

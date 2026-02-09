@@ -33,8 +33,13 @@ body {
 }
 
 @keyframes moveBackground {
-    0% { background-position: 0 0; }
-    100% { background-position: 100% 100%; }
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 100% 100%;
+    }
 }
 
 .container {
@@ -57,7 +62,8 @@ h1 {
     text-shadow: 0 0 10px var(--neon-blue);
 }
 
-input[type="text"], input[type="number"] {
+input[type="text"],
+input[type="number"] {
     width: 100%;
     padding: 12px 15px;
     margin-bottom: 1.5rem;
@@ -107,14 +113,14 @@ button:hover {
 
 .repo-link {
     margin-top: 1.5rem;
-    font-size: 0.8rem;
-    opacity: 0.7;
+    font-size: 1.5rem;
+    opacity: 0.9;
 }
 
 .repo-link a {
     color: var(--text-white);
     text-decoration: none;
-    border-bottom: 1px dotted var(--text-white);
+    /* border-bottom removed */
 }
 
 .result-container {
@@ -123,7 +129,8 @@ button:hover {
     border: 1px solid var(--neon-pink);
     border-radius: 10px;
     background: rgba(255, 0, 255, 0.05);
-    display: none; /* Hidden by default */
+    display: none;
+    /* Hidden by default */
 }
 
 .short-url {
