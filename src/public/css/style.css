@@ -63,6 +63,7 @@ h1 {
 }
 
 input[type="text"],
+input[type="password"],
 input[type="number"] {
     width: 100%;
     padding: 12px 15px;
