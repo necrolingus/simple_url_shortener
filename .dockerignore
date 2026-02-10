@@ -1,0 +1,9 @@
+node_modules
+.git
+.env
+.gitignore
+requirements
+directives
+tests
+AGENTS.md
+README.md
