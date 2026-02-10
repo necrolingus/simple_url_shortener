@@ -1,5 +1,5 @@
 const rateLimit = new Map();
-const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_WINDOW = process.env.RATE_LIMIT_WINDOW ? parseInt(process.env.RATE_LIMIT_WINDOW) : 60 * 1000; // 1 minute
 const MAX_REQUESTS = process.env.RATE_LIMIT ? parseInt(process.env.RATE_LIMIT) : 5;
 
 const rateLimiter = (req, res, next) => {
