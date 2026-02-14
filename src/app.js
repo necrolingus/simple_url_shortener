@@ -8,7 +8,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const { engine } = require('express-handlebars');
-const winston = require('winston');
 const rateLimit = require('express-rate-limit');
 
 // Load environment variables
@@ -32,15 +31,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.engine('.hbs', engine({ extname: '.hbs' }));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
-
-// Logging
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.json(),
-    transports: [
-        new winston.transports.Console()
-    ]
-});
 
 // Global Rate Limiting (express-rate-limit)
 const windowSeconds = process.env.RATE_LIMIT_WINDOW ? parseInt(process.env.RATE_LIMIT_WINDOW) : 60;
