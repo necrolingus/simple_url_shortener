@@ -1,3 +1,7 @@
+/**
+ * Client-side logic for login, URL shortening, clipboard copy, and URL deletion.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // Login Handling
@@ -50,9 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
-                        // API Key is handled by cookie in index, but if we need it in header:
-                        // 'api-key': getCookie('api_key') ... but httpOnly cookie is better.
-                        // The middleware checks cookie.
                     },
                     body: JSON.stringify({ longUrl, expiryDays, customShortUrl })
                 });
@@ -62,8 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     resultContainer.style.display = 'block';
                     document.getElementById('shortUrlResult').textContent = data.shortUrl;
+                    // Reload after a short delay so the table refreshes
+                    setTimeout(() => window.location.reload(), 1500);
                 } else {
-                    // Check if 401 unauthorized (cookie expired?)
                     if (response.status === 401) {
                         window.location.href = '/login';
                         return;
@@ -84,4 +86,32 @@ function copyToClipboard() {
     }).catch(err => {
         console.error('Failed to copy', err);
     });
+}
+
+async function deleteUrl(shortCode) {
+    try {
+        const response = await fetch(`/api/urls/${shortCode}`, {
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            // Remove the row from the table
+            const row = document.getElementById(`row-${shortCode}`);
+            if (row) {
+                row.style.transition = 'opacity 0.3s ease';
+                row.style.opacity = '0';
+                setTimeout(() => row.remove(), 300);
+            }
+        } else {
+            if (response.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
+            console.error('Delete failed:', data.error);
+        }
+    } catch (err) {
+        console.error('Network error during delete:', err);
+    }
 }

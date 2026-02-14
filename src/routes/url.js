@@ -61,4 +61,31 @@ router.post('/shorten', async (req, res) => {
     }
 });
 
+// Delete a short URL
+router.delete('/urls/:shortUrl', async (req, res) => {
+    try {
+        const { shortUrl } = req.params;
+        const urlEntry = await Url.findByPk(shortUrl);
+
+        if (!urlEntry) {
+            return res.status(404).json({ error: 'URL not found' });
+        }
+
+        await urlEntry.destroy();
+
+        // Audit the deletion
+        await Audit.create({
+            eventType: 'DELETED',
+            urlAccessed: shortUrl,
+            details: `Deleted by user. LongURL was: ${urlEntry.longURL}`
+        });
+
+        res.json({ success: true });
+
+    } catch (error) {
+        console.error('[ERROR] Delete URL failed:', error);
+        res.status(500).json({ error: 'Server error: ' + error.message });
+    }
+});
+
 module.exports = router;

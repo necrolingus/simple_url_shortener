@@ -1,11 +1,16 @@
+/**
+ * Simple URL Shortener - Main application entry point.
+ * Sets up Express, Handlebars, middleware, rate limiting, and routes.
+ */
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const { engine } = require('express-handlebars');
 const winston = require('winston');
+const rateLimit = require('express-rate-limit');
 
-// Load environment variables
 // Load environment variables
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
@@ -37,10 +42,20 @@ const logger = winston.createLogger({
     ]
 });
 
-const { rateLimiter } = require('./middleware/auth');
+// Global Rate Limiting (express-rate-limit)
+const windowSeconds = process.env.RATE_LIMIT_WINDOW ? parseInt(process.env.RATE_LIMIT_WINDOW) : 60;
+const maxRequests = process.env.RATE_LIMIT ? parseInt(process.env.RATE_LIMIT) : 15;
 
-// Global Rate Limiting
-app.use(rateLimiter);
+const limiter = rateLimit({
+    windowMs: windowSeconds * 1000,
+    max: maxRequests,
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: (req) => req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+    message: { error: 'Too Many Requests' }
+});
+
+app.use(limiter);
 
 // Routes
 app.use('/', require('./routes/auth')); // Login

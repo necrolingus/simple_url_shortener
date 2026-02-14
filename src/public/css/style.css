@@ -12,11 +12,11 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--dark-bg);
     color: var(--text-white);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    align-items: flex-start;
+    padding-top: 4vh;
 }
 
 /* Moving Dots Background */
@@ -44,7 +44,7 @@ body {
 
 .container {
     width: 100%;
-    max-width: 500px;
+    max-width: 900px;
     padding: 2rem;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
@@ -52,6 +52,7 @@ body {
     border: 1px solid var(--border-white);
     box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
     text-align: center;
+    margin-bottom: 2rem;
 }
 
 h1 {
@@ -123,7 +124,6 @@ button:hover {
     color: var(--text-white);
     text-decoration: underline;
     text-shadow: 0 0 10px #39ff14;
-    /* Neon Green Glow */
 }
 
 .result-container {
@@ -133,7 +133,6 @@ button:hover {
     border-radius: 10px;
     background: rgba(255, 0, 255, 0.05);
     display: none;
-    /* Hidden by default */
 }
 
 .short-url {
@@ -148,4 +147,105 @@ button:hover {
     font-size: 4rem;
     color: var(--neon-pink);
     text-shadow: 0 0 20px var(--neon-pink);
+}
+
+/* ========== URL Table ========== */
+.table-heading {
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    text-shadow: 0 0 8px var(--neon-pink);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-top: 0.5rem;
+}
+
+.url-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.url-table thead th {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--border-white);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.url-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    transition: background 0.2s ease;
+}
+
+.url-table tbody tr:hover {
+    background: rgba(0, 243, 255, 0.05);
+}
+
+.url-table td {
+    padding: 10px 8px;
+    vertical-align: middle;
+}
+
+.table-link {
+    color: var(--neon-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.table-link:hover {
+    text-shadow: 0 0 8px var(--neon-blue);
+}
+
+.long-url-cell {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.date-cell {
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+}
+
+.click-cell {
+    text-align: center;
+    font-weight: 500;
+    color: var(--neon-blue);
+}
+
+.delete-btn {
+    width: auto;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 68, 68, 0.4);
+    color: #ff4444;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+    background: rgba(255, 68, 68, 0.2);
+    border-color: #ff4444;
+    box-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
+    color: #ff4444;
+}
+
+.expired-row {
+    opacity: 0.4;
 }

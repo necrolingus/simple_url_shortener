@@ -1,30 +1,7 @@
-const rateLimit = new Map();
-const RATE_LIMIT_WINDOW = (process.env.RATE_LIMIT_WINDOW ? parseInt(process.env.RATE_LIMIT_WINDOW) : 60) * 1000; // 1 minute
-const MAX_REQUESTS = process.env.RATE_LIMIT ? parseInt(process.env.RATE_LIMIT) : 5;
-
-const rateLimiter = (req, res, next) => {
-    // Ip detection
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    const now = Date.now();
-
-    if (!rateLimit.has(ip)) {
-        rateLimit.set(ip, []);
-    }
-
-    const timestamps = rateLimit.get(ip);
-    const recentRequests = timestamps.filter(time => now - time < RATE_LIMIT_WINDOW);
-
-    // Update with filtered list
-    rateLimit.set(ip, recentRequests);
-
-    if (recentRequests.length >= MAX_REQUESTS) {
-        return res.status(429).json({ error: 'Too Many Requests' });
-    }
-
-    recentRequests.push(now);
-    rateLimit.set(ip, recentRequests);
-    next();
-}
+/**
+ * Authentication middleware for API key validation.
+ * Checks header first, then cookie for the API key.
+ */
 
 const apiKeyAuth = (req, res, next) => {
     // Check header first, then cookie
@@ -44,4 +21,4 @@ const apiKeyAuth = (req, res, next) => {
     next();
 };
 
-module.exports = { rateLimiter, apiKeyAuth };
+module.exports = { apiKeyAuth };

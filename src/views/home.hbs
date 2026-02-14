@@ -14,3 +14,33 @@
     <div class="short-url" id="shortUrlResult"></div>
     <button onclick="copyToClipboard()">Copy</button>
 </div>
+
+{{#if urls.length}}
+<h2 class="table-heading">Your URLs</h2>
+<div class="table-wrapper">
+    <table class="url-table" id="urlTable">
+        <thead>
+            <tr>
+                <th>Short URL</th>
+                <th>Long URL</th>
+                <th>Created</th>
+                <th>Expires</th>
+                <th>Clicks</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each urls}}
+            <tr id="row-{{this.shortURL}}" class="{{#if this.isExpired}}expired-row{{/if}}">
+                <td><a href="{{this.fullShortURL}}" target="_blank" class="table-link">{{this.shortURL}}</a></td>
+                <td class="long-url-cell" title="{{this.longURL}}">{{this.longURL}}</td>
+                <td class="date-cell">{{this.createdDate}}</td>
+                <td class="date-cell">{{this.expiryDate}}</td>
+                <td class="click-cell">{{this.clickCount}}</td>
+                <td><button class="delete-btn" onclick="deleteUrl('{{this.shortURL}}')">✕</button></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+{{/if}}
