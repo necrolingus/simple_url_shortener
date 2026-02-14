@@ -52,7 +52,18 @@ const limiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
     keyGenerator: (req) => req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-    message: { error: 'Too Many Requests' }
+    handler: (req, res) => {
+        // For browser page loads, render the home page with an error message
+        if (req.accepts('html')) {
+            return res.status(429).render('home', {
+                layout: 'main',
+                urls: [],
+                rateLimitError: 'Too many requests. Please wait and try again.'
+            });
+        }
+        // For API/AJAX calls, return JSON
+        return res.status(429).json({ error: 'Too Many Requests' });
+    }
 });
 
 app.use(limiter);

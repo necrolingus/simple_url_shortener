@@ -1,4 +1,3 @@
-const crypto = require('crypto');
 const Url = require('../models/Url');
 
 const generateShortCode = async (length = 6) => {

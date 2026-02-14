@@ -1,3 +1,7 @@
+{{#if rateLimitError}}
+<div class="error-message rate-limit-error">{{rateLimitError}}</div>
+{{/if}}
+
 <h1>Shorten URL</h1>
 <form id="shortenForm">
     <input type="text" id="longUrl" name="longUrl" placeholder="Paste your long URL here..." required>

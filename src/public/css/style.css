@@ -249,3 +249,13 @@ button:hover {
 .expired-row {
     opacity: 0.4;
 }
+
+.rate-limit-error {
+    font-size: 1.1rem;
+    padding: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 68, 68, 0.4);
+    border-radius: 10px;
+    background: rgba(255, 68, 68, 0.08);
+    text-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
+}
