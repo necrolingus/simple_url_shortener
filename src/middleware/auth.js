@@ -1,11 +1,22 @@
 /**
  * Authentication middleware for API key validation.
  * Checks header first, then cookie for the API key.
+ * Cookie values are AES-256-GCM encrypted and must be decrypted before comparison.
  */
 
+const { decryptCookieValue } = require('../utils/cookieCrypto');
+
 const apiKeyAuth = (req, res, next) => {
-    // Check header first, then cookie
-    const apiKey = req.headers['api-key'] || (req.cookies ? req.cookies['api_key'] : null);
+    // Header API key is used as-is (plaintext); cookie value must be decrypted
+    const headerKey = req.headers['api-key'] || null;
+
+    let cookieKey = null;
+    const rawCookieVal = req.signedCookies ? req.signedCookies['api_key'] : null;
+    if (rawCookieVal) {
+        cookieKey = decryptCookieValue(rawCookieVal);
+    }
+
+    const apiKey = headerKey || cookieKey;
 
     // Check if API key exists and matches
     if (!apiKey || apiKey !== process.env.API_KEY) {
@@ -22,3 +33,4 @@ const apiKeyAuth = (req, res, next) => {
 };
 
 module.exports = { apiKeyAuth };
+

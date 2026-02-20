@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { encryptCookieValue } = require('../utils/cookieCrypto');
 
 router.get('/login', (req, res) => {
     res.render('login', {
@@ -17,8 +18,12 @@ router.post('/login', (req, res) => {
         const cookieDays = process.env.COOKIE_VALID_DAYS ? parseInt(process.env.COOKIE_VALID_DAYS) : 1;
         const maxAge = cookieDays * 24 * 60 * 60 * 1000;
 
-        res.cookie('api_key', apiKey, {
+        // Encrypt the key so the plaintext is never stored in the browser cookie
+        const encryptedKey = encryptCookieValue(apiKey);
+
+        res.cookie('api_key', encryptedKey, {
             httpOnly: true,
+            signed: true,
             secure: process.env.NODE_ENV === 'production',
             maxAge: maxAge
         });
@@ -30,3 +35,4 @@ router.post('/login', (req, res) => {
 });
 
 module.exports = router;
+

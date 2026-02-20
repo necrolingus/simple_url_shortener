@@ -24,7 +24,11 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+const cookieSecret = process.env.COOKIE_SECRET;
+if (!cookieSecret) {
+    console.warn('WARNING: COOKIE_SECRET is not set. Signed cookies will not be secure.');
+}
+app.use(cookieParser(cookieSecret));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Handlebars
