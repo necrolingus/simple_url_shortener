@@ -1,8 +1,11 @@
 name: build_docker_image
 
 on:
-  workflow_dispatch:
-  
+  schedule:
+    # Runs at 00:00 UTC every day (adjust time as needed)
+    - cron: '51 02 * * *'
+  workflow_dispatch: # Keeps the manual button just in case
+
 jobs:
   login_build_push:
     runs-on: ubuntu-latest
@@ -10,19 +13,36 @@ jobs:
       packages: write
       contents: read
     steps:
-      -
-        name: Login to GitHub Container Registry
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Important: Fetches all history so we can check dates
+
+      - name: Check for recent changes
+        id: check_changes
+        run: |
+          # Check if there are commits in the last 24 hours
+          if [ -n "$(git log --since="24 hours ago" --oneline)" ]; then
+            echo "Changes detected in the last 24 hours. Proceeding with build."
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "Manual trigger detected. Proceeding with build."
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes in the last 24 hours. Skipping build."
+            echo "should_build=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Login to GitHub Container Registry
+        if: steps.check_changes.outputs.should_build == 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      -
-        name: Checkout Before Build
-        uses: actions/checkout@v3
-      -    
-        name: Build Image
-        # The .dockerignore file is automatically picked up by the build context (.)
+
+      - name: Build and Push Image
+        if: steps.check_changes.outputs.should_build == 'true'
         run: |
-              docker build . --tag ghcr.io/${{github.actor}}/${{ github.event.repository.name }}:latest
-              docker push ghcr.io/${{github.actor}}/${{ github.event.repository.name }}:latest
+          docker build . --tag ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:latest
+          docker push ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:latest
