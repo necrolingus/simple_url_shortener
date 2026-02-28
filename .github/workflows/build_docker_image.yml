@@ -2,8 +2,7 @@ name: build_docker_image
 
 on:
   schedule:
-    # Runs at 03:42 UTC every day (a "quiet" time to avoid GitHub congestion)
-    - cron: '42 3 * * *'
+    - cron: '42 2 * * *'
   workflow_dispatch: 
 
 jobs:
