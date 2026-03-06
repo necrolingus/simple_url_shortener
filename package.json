@@ -24,7 +24,7 @@
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
     "express-handlebars": "^8.0.5",
-    "express-rate-limit": "^8.2.1",
+    "express-rate-limit": "^8.2.2",
     "hbs": "^4.2.0",
     "pg": "^8.18.0",
     "pg-hstore": "^2.3.4",
