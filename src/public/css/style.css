@@ -43,16 +43,26 @@ body {
 }
 
 .container {
-    width: 100%;
-    max-width: 900px;
+    width: 90%;
+    max-width: 800px;
+    box-sizing: border-box;
     padding: 2rem;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border-radius: 15px;
     border: 1px solid var(--border-white);
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.15);
     text-align: center;
+    margin-top: 7rem;
     margin-bottom: 2rem;
+}
+
+#apiKey,
+#loginBtn {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 
 h1 {
