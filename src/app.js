@@ -20,6 +20,7 @@ const cleanupTask = require('./services/cleanup');
 // Initialize Express
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.set('trust proxy', parseInt(process.env.NUMBER_OF_PROXIES) || 1);
 
 // Middleware
 app.use(express.json());
