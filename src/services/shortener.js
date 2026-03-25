@@ -1,12 +1,21 @@
 const Url = require('../models/Url');
 
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+const generatePrefix = (length = 3) => {
+    let prefix = '';
+    for (let i = 0; i < length; i++) {
+        prefix += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+    }
+    return prefix;
+};
+
 const generateShortCode = async (length = 6) => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
     while (true) {
         result = '';
         for (let i = 0; i < length; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length));
+            result += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
         }
 
         // check uniqueness
@@ -19,5 +28,6 @@ const generateShortCode = async (length = 6) => {
 };
 
 module.exports = {
-    generateShortCode
+    generateShortCode,
+    generatePrefix
 };
