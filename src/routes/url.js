@@ -50,7 +50,7 @@ router.post('/shorten', async (req, res) => {
             details: `Created by user ${req.user.id}. LongURL: ${longUrl}`
         });
 
-        const domain = process.env.DOMAIN || `http://localhost:${process.env.PORT}`;
+        const domain = `${req.protocol}://${req.get('host')}`;
         const fullShortUrl = `${domain}/s/${shortCode}`;
 
         res.json({ shortUrl: fullShortUrl });

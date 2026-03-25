@@ -46,8 +46,7 @@ A modern, secure, and neon-themed URL shortener built with Node.js and PostgreSQ
     ```ini
     PORT=3000
     DB_CONFIG=postgres://user:password@localhost:5432/simple_url_shortener
-    DOMAIN=http://localhost:3000
-    GITHUB_REPO=https://github.com/necrolingus/simple_url_shortener
+GITHUB_REPO=https://github.com/necrolingus/simple_url_shortener
     COOKIE_VALID_DAYS=30
     RATE_LIMIT=15
     RATE_LIMIT_WINDOW=60

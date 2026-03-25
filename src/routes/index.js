@@ -67,7 +67,7 @@ router.get('/', requireAuth, async (req, res) => {
             const createdDate = new Date(url.createdDate);
             const expiryDate = new Date(createdDate.getTime() + (url.expiryDays * 24 * 60 * 60 * 1000));
 
-            const domain = process.env.DOMAIN || `http://localhost:${process.env.PORT}`;
+            const domain = `${req.protocol}://${req.get('host')}`;
 
             return {
                 shortURL: url.shortURL,
