@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Url = require('../models/Url');
 const Audit = require('../models/Audit');
-const { generateShortCode } = require('../services/shortener');
+const { generateShortCode, generatePrefix } = require('../services/shortener');
 const { requireAuth } = require('../middleware/auth');
 
 // Apply auth to these routes
@@ -24,9 +24,12 @@ router.post('/shorten', async (req, res) => {
                 return res.status(400).json({ error: 'Custom alias must contain only letters and numbers.' });
             }
 
+            // Prepend a random 3-char prefix to prevent alias enumeration
+            shortCode = generatePrefix() + shortCode;
+
             const existing = await Url.findByPk(shortCode);
             if (existing) {
-                return res.status(400).json({ error: 'Custom short URL already exists' });
+                return res.status(400).json({ error: 'Custom short URL already exists. Please try again.' });
             }
         } else {
             // Generate one

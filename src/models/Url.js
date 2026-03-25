@@ -4,7 +4,7 @@ const User = require('./User');
 
 const Url = sequelize.define('Url', {
     shortURL: {
-        type: DataTypes.STRING(10), // Adjustable length via logic, but DB col needs max
+        type: DataTypes.STRING(20), // 3-char prefix + up to 17-char custom alias
         primaryKey: true,
         allowNull: false
     },
