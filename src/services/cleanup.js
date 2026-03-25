@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 const Url = require('../models/Url');
 const Audit = require('../models/Audit');
-const logger = require('winston'); // Assuming we setup logger later or use console for now, but winston was installed
+const Session = require('../models/Session');
 
 const cleanupTask = () => {
     // Run immediately on start
@@ -16,18 +16,7 @@ const runCleanup = async () => {
         console.log('Running cleanup task...');
         const now = new Date();
 
-        // Find URLs that are NOT expired but SHOULD be
-        // We need to calculate expiry date based on createdDate + expiryDays
-        // Since we can't easily do (createdDate + expiryDays) < now in standard SQL without dialect specific syntax easily in all ORMs,
-        // we might handle this by fetching or using a raw query. 
-        // However, Sequelize allows literal.
-
-        // Simpler approach: Fetch all valid URLs and check in JS if dataset is small, 
-        // OR better: use a raw query update.
-
-        // Let's use a robust approach: Find all active URLs, check expiry.
-        // For a "Simple" shortener, this is fine.
-
+        // Expire URLs that have passed their expiry date
         const activeUrls = await Url.findAll({ where: { isExpired: false } });
 
         for (const url of activeUrls) {
@@ -48,6 +37,17 @@ const runCleanup = async () => {
 
                 console.log(`Expired URL: ${url.shortURL}`);
             }
+        }
+
+        // Clean up expired sessions
+        const deletedSessions = await Session.destroy({
+            where: {
+                expiresAt: { [Op.lt]: now }
+            }
+        });
+
+        if (deletedSessions > 0) {
+            console.log(`Cleaned up ${deletedSessions} expired session(s).`);
         }
     } catch (error) {
         console.error('Error in cleanup task:', error);

@@ -16,6 +16,13 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 // Database
 const sequelize = require('./config/database');
 const cleanupTask = require('./services/cleanup');
+const { migrateUrlsAddUserId } = require('./services/migrate');
+
+// Import models so Sequelize knows about them and their associations
+require('./models/User');
+require('./models/Session');
+require('./models/Url');
+require('./models/Audit');
 
 // Initialize Express
 const app = express();
@@ -64,7 +71,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes
-app.use('/', require('./routes/auth')); // Login
+app.use('/', require('./routes/auth')); // Login, Logout
 app.use('/', require('./routes/index')); // Home and Redirects
 app.use('/api', require('./routes/url')); // API
 
@@ -74,8 +81,11 @@ const startServer = async () => {
         await sequelize.authenticate();
         console.log('Database connected.');
 
-        // Sync models
-        await sequelize.sync();
+        // Run migration for existing databases (adds userId to urls table)
+        await migrateUrlsAddUserId();
+
+        // Sync models (creates tables if they don't exist, alter adds missing columns)
+        await sequelize.sync({ alter: true });
         console.log('Models synced.');
 
         // Start cleanup task

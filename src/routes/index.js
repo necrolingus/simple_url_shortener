@@ -1,15 +1,14 @@
 /**
  * Index routes - Home page and short URL redirects.
- * GET / renders the home page with a list of all URLs.
- * GET /s/:shortUrl redirects to the original URL.
+ * GET / renders the home page with user's own URLs only.
+ * GET /s/:shortUrl redirects to the original URL (public).
  */
 
 const express = require('express');
 const router = express.Router();
-const { Sequelize } = require('sequelize');
 const Url = require('../models/Url');
 const Audit = require('../models/Audit');
-const { apiKeyAuth } = require('../middleware/auth');
+const { requireAuth } = require('../middleware/auth');
 
 // Public route: Redirect
 router.get('/s/:shortUrl', async (req, res) => {
@@ -19,7 +18,6 @@ router.get('/s/:shortUrl', async (req, res) => {
 
         if (urlEntry && !urlEntry.isExpired) {
             // Audit valid access
-            // We don't await this to keep redirect fast, but catch errors
             Audit.create({
                 eventType: 'ACCESSED',
                 urlAccessed: shortUrl,
@@ -47,11 +45,12 @@ router.get('/s/:shortUrl', async (req, res) => {
     }
 });
 
-// Protected route: Home page with URL list
-router.get('/', apiKeyAuth, async (req, res) => {
+// Protected route: Home page with user's own URL list
+router.get('/', requireAuth, async (req, res) => {
     try {
-        // Fetch all URLs ordered by creation date descending
+        // Fetch only this user's URLs ordered by creation date descending
         const urls = await Url.findAll({
+            where: { userId: req.user.id },
             order: [['createdDate', 'DESC']]
         });
 

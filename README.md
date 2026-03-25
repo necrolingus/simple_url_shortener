@@ -7,11 +7,12 @@ A modern, secure, and neon-themed URL shortener built with Node.js and PostgreSQ
 
 ## Features ✨
 
-*   **Secure Authentication**: API Key-based login system for authorized access.
+*   **Cookie-Based Authentication**: Instant login with a secure cookie — no email or password needed. Recovery tokens let you get back in if your cookie expires.
+*   **Per-User Privacy**: Each user can only see and manage their own shortened URLs.
 *   **Custom Short Codes**: Create your own memorable aliases (e.g., `/s/my-link`) with alphanumeric validation.
 *   **Expiry Dates**: Set expiration days for your links to keep your database clean.
-*   **Rate Limiting**: Built-in protection against abuse.
-*   **Modern UI**: distinctive "Neon" aesthetic with a moving particles background.
+*   **Rate Limiting**: Configurable global and per-endpoint rate limiting for abuse protection.
+*   **Modern UI**: Distinctive "Neon" aesthetic with a moving particles background.
 *   **Audit Logging**: Tracks simple metrics on link creation and access.
 
 ## Tech Stack 🛠️
@@ -45,12 +46,15 @@ A modern, secure, and neon-themed URL shortener built with Node.js and PostgreSQ
     ```ini
     PORT=3000
     DB_CONFIG=postgres://user:password@localhost:5432/simple_url_shortener
-    API_KEY=your_secure_api_key
-    RATE_LIMIT=5
     DOMAIN=http://localhost:3000
     GITHUB_REPO=https://github.com/necrolingus/simple_url_shortener
-    COOKIE_VALID_DAYS=10
-    RATE_LIMIT=5
+    COOKIE_VALID_DAYS=30
+    RATE_LIMIT=15
+    RATE_LIMIT_WINDOW=60
+    COOKIE_SECRET=your_long_random_cookie_signing_secret
+    RECOVERY_RATE_LIMIT=5
+    RECOVERY_RATE_LIMIT_WINDOW=900
+    NUMBER_OF_PROXIES=2
     ```
 
 4.  **Run the Server**

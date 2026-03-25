@@ -4,21 +4,50 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Login Handling
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const apiKey = document.getElementById('apiKey').value;
+    // Create Account Handling
+    const createAccountBtn = document.getElementById('createAccountBtn');
+    if (createAccountBtn) {
+        createAccountBtn.addEventListener('click', async () => {
             const errorDiv = document.getElementById('loginError');
-
-            errorDiv.textContent = ''; // Clear error
+            errorDiv.textContent = '';
 
             try {
                 const response = await fetch('/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ apiKey })
+                    body: JSON.stringify({ action: 'create' })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.recoveryToken) {
+                    // Show recovery token
+                    document.getElementById('loginActions').style.display = 'none';
+                    document.getElementById('recoveryTokenValue').textContent = data.recoveryToken;
+                    document.getElementById('recoveryTokenDisplay').style.display = 'block';
+                } else {
+                    errorDiv.textContent = data.error || 'Failed to create account';
+                }
+            } catch (err) {
+                errorDiv.textContent = 'An error occurred. Please try again.';
+            }
+        });
+    }
+
+    // Recover Account Handling
+    const recoverForm = document.getElementById('recoverForm');
+    if (recoverForm) {
+        recoverForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const recoveryToken = document.getElementById('recoveryToken').value;
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = '';
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'recover', recovery_token: recoveryToken })
                 });
 
                 const data = await response.json();
@@ -26,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.success) {
                     window.location.href = data.redirect;
                 } else {
-                    errorDiv.textContent = data.error || 'Login failed';
+                    errorDiv.textContent = data.error || 'Recovery failed';
                 }
             } catch (err) {
                 errorDiv.textContent = 'An error occurred. Please try again.';
@@ -96,6 +125,17 @@ function copyToClipboard() {
     const text = document.getElementById('shortUrlResult').innerText;
     navigator.clipboard.writeText(text).then(() => {
         // Copied silently
+    }).catch(err => {
+        console.error('Failed to copy', err);
+    });
+}
+
+function copyRecoveryToken() {
+    const text = document.getElementById('recoveryTokenValue').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-token-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
     }).catch(err => {
         console.error('Failed to copy', err);
     });

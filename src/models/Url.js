@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const User = require('./User');
 
 const Url = sequelize.define('Url', {
     shortURL: {
@@ -10,6 +11,14 @@ const Url = sequelize.define('Url', {
     longURL: {
         type: DataTypes.TEXT,
         allowNull: false
+    },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'id'
+        }
     },
     expiryDays: {
         type: DataTypes.INTEGER,
@@ -26,5 +35,8 @@ const Url = sequelize.define('Url', {
     createdAt: 'createdDate',
     updatedAt: false // We only care about creation date
 });
+
+User.hasMany(Url, { foreignKey: 'userId' });
+Url.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = Url;

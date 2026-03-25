@@ -1,9 +1,33 @@
-<h1>Login</h1>
-<form id="loginForm">
-    <input type="password" id="apiKey" name="apiKey" placeholder="Enter your API key" required autofocus>
-    <button type="submit" id="loginBtn">Login</button>
-    <!-- <div class="repo-link">
-        <a href="{{githubRepo}}" target="_blank">Clone this repo</a>
-    </div> -->
-</form>
+<h1>URL Shortener</h1>
+<p class="subtitle">Shorten, share, and track your links</p>
+
+<div id="recoveryTokenDisplay" style="display:none;">
+    <p>You're all set! Save this recovery token - you'll need it to get back in if your cookie expires:</p>
+    <div class="recovery-token-box">
+        <code id="recoveryTokenValue"></code>
+        <button type="button" onclick="copyRecoveryToken()" class="copy-token-btn">Copy</button>
+    </div>
+    <p class="recovery-warning">This is the only time you will see this token.</p>
+    <a href="/" class="continue-link">Continue to dashboard</a>
+</div>
+
+<div id="loginActions">
+    <div class="login-section">
+        <h2 class="section-heading">Get Started</h2>
+        <button type="button" id="createAccountBtn" class="neon-glow-btn">Login with Cookie</button>
+    </div>
+
+    <div class="divider"><span>or</span></div>
+
+    <div class="login-section">
+        <h2 class="section-heading">Recover Account</h2>
+        <form id="recoverForm">
+            <input type="text" id="recoveryToken" name="recovery_token" placeholder="Recovery Token" required>
+            <button type="submit">Recover Account</button>
+        </form>
+    </div>
+</div>
+
+<a href="https://github.com/necrolingus/simple_url_shortener" target="_blank" class="github-link">GitHub</a>
+
 <div id="loginError" class="error-message"></div>

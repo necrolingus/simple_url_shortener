@@ -1,36 +1,47 @@
-/**
- * Authentication middleware for API key validation.
- * Checks header first, then cookie for the API key.
- * Cookie values are AES-256-GCM encrypted and must be decrypted before comparison.
- */
+const Session = require('../models/Session');
+const User = require('../models/User');
+const { Op } = require('sequelize');
 
-const { decryptCookieValue } = require('../utils/cookieCrypto');
+const COOKIE_NAME = 'sus_session';
 
-const apiKeyAuth = (req, res, next) => {
-    // Header API key is used as-is (plaintext); cookie value must be decrypted
-    const headerKey = req.headers['api-key'] || null;
+const requireAuth = async (req, res, next) => {
+    const token = req.cookies[COOKIE_NAME];
 
-    let cookieKey = null;
-    const rawCookieVal = req.signedCookies ? req.signedCookies['api_key'] : null;
-    if (rawCookieVal) {
-        cookieKey = decryptCookieValue(rawCookieVal);
-    }
-
-    const apiKey = headerKey || cookieKey;
-
-    // Check if API key exists and matches
-    if (!apiKey || apiKey !== process.env.API_KEY) {
-        // If it's a browser request (accepts html), redirect to login
+    if (!token) {
         if (req.accepts('html')) {
-            // Avoid redirect loop if already on login
-            if (req.path === '/login') return next();
             return res.redirect('/login');
         }
-        return res.status(401).json({ error: 'Unauthorized: Invalid or missing API Key' });
+        return res.status(401).json({ error: 'Unauthorized: No session' });
     }
 
-    next();
+    try {
+        const session = await Session.findOne({
+            where: {
+                sessionToken: token,
+                expiresAt: { [Op.gt]: new Date() }
+            },
+            include: [{ model: User }]
+        });
+
+        if (!session) {
+            res.clearCookie(COOKIE_NAME);
+            if (req.accepts('html')) {
+                return res.redirect('/login');
+            }
+            return res.status(401).json({ error: 'Unauthorized: Invalid or expired session' });
+        }
+
+        req.user = session.User;
+        req.sessionData = session;
+        next();
+    } catch (error) {
+        console.error('[ERROR] Auth middleware:', error);
+        res.clearCookie(COOKIE_NAME);
+        if (req.accepts('html')) {
+            return res.redirect('/login');
+        }
+        return res.status(500).json({ error: 'Server error' });
+    }
 };
 
-module.exports = { apiKeyAuth };
-
+module.exports = { requireAuth, COOKIE_NAME };

@@ -3,10 +3,10 @@ const router = express.Router();
 const Url = require('../models/Url');
 const Audit = require('../models/Audit');
 const { generateShortCode } = require('../services/shortener');
-const { apiKeyAuth } = require('../middleware/auth');
+const { requireAuth } = require('../middleware/auth');
 
 // Apply auth to these routes
-router.use(apiKeyAuth);
+router.use(requireAuth);
 
 router.post('/shorten', async (req, res) => {
     try {
@@ -38,6 +38,7 @@ router.post('/shorten', async (req, res) => {
         const newUrl = await Url.create({
             shortURL: shortCode,
             longURL: longUrl,
+            userId: req.user.id,
             expiryDays: days,
             isExpired: false
         });
@@ -46,7 +47,7 @@ router.post('/shorten', async (req, res) => {
         await Audit.create({
             eventType: 'CREATED',
             urlAccessed: shortCode,
-            details: `Created by user. LongURL: ${longUrl}`
+            details: `Created by user ${req.user.id}. LongURL: ${longUrl}`
         });
 
         const domain = process.env.DOMAIN || `http://localhost:${process.env.PORT}`;
@@ -56,12 +57,11 @@ router.post('/shorten', async (req, res) => {
 
     } catch (error) {
         console.error('[ERROR] Shorten URL failed:', error);
-        console.log('[DEBUG] Error details:', JSON.stringify(error, null, 2)); // Detailed JSON log
         res.status(500).json({ error: 'Server error: ' + error.message });
     }
 });
 
-// Delete a short URL
+// Delete a short URL - only if owned by the current user
 router.delete('/urls/:shortUrl', async (req, res) => {
     try {
         const { shortUrl } = req.params;
@@ -71,13 +71,18 @@ router.delete('/urls/:shortUrl', async (req, res) => {
             return res.status(404).json({ error: 'URL not found' });
         }
 
+        // Ensure the URL belongs to this user
+        if (urlEntry.userId !== req.user.id) {
+            return res.status(403).json({ error: 'Forbidden: You do not own this URL' });
+        }
+
         await urlEntry.destroy();
 
         // Audit the deletion
         await Audit.create({
             eventType: 'DELETED',
             urlAccessed: shortUrl,
-            details: `Deleted by user. LongURL was: ${urlEntry.longURL}`
+            details: `Deleted by user ${req.user.id}. LongURL was: ${urlEntry.longURL}`
         });
 
         res.json({ success: true });

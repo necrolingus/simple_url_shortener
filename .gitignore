@@ -79,6 +79,9 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+# Claude files
+.claude/
+
 # Documentation and Agent files
 ### AGENTS.md
 ### directives/
